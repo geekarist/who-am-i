@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Who Am I</string>
+    <string name="main_sign_in">Sign in</string>
 </resources>
