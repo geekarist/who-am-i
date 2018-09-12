@@ -5,7 +5,4 @@ import android.util.Log
 
 class MainViewModel : ViewModel() {
 
-    fun signIn() {
-        Log.d(javaClass.simpleName, "Yo")
-    }
 }

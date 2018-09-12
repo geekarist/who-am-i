@@ -7,6 +7,10 @@
             name="viewModel"
             type="me.cpele.whoami.MainViewModel"
             />
+        <variable
+            name="controller"
+            type="me.cpele.whoami.MainFragment"
+            />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -23,12 +27,12 @@
             android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> controller.signIn()}"
             android:text="@string/main_sign_in"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:onClick="@{() -> viewModel.signIn()}"
             />
 
     </android.support.constraint.ConstraintLayout>

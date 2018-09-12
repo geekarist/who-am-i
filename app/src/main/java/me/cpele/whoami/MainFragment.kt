@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import me.cpele.whoami.databinding.MainFragmentBinding
 
 class MainFragment : Fragment() {
@@ -32,6 +33,11 @@ class MainFragment : Fragment() {
 
         val binding = MainFragmentBinding.bind(view)
         binding.viewModel = viewModel
+        binding.controller = this
         binding.setLifecycleOwner(this)
+    }
+
+    fun signIn() {
+        Toast.makeText(context, "Yo", Toast.LENGTH_LONG).show()
     }
 }
