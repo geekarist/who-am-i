@@ -38,6 +38,5 @@ class MainFragment : Fragment() {
     }
 
     fun signIn() {
-        Toast.makeText(context, "Yo", Toast.LENGTH_LONG).show()
     }
 }
