@@ -65,8 +65,11 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.apply {
-            AuthorizationResponse.fromIntent(intent)?.apply {
-                Toast.makeText(applicationContext, "Received auth code: ${authorizationCode}", Toast.LENGTH_LONG).show()
+            val response = AuthorizationResponse.fromIntent(intent)
+            val error = AuthorizationException.fromIntent(intent)
+            val authState = AuthState(response, error)
+            response?.apply {
+                Toast.makeText(applicationContext, "Received auth code: $authorizationCode", Toast.LENGTH_LONG).show()
             }
         }
     }
