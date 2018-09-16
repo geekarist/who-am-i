@@ -86,9 +86,15 @@ class MainFragment : Fragment() {
                         ).show()
                         Log.w(MainFragment::class.java.simpleName, authorizationException)
                     } else {
-                        authService?.let {
-                            performActionWithFreshTokens(it) { accessToken, _, _ ->
-                                Toast.makeText(context, "Access token: $accessToken", Toast.LENGTH_LONG).show()
+                        response?.apply {
+                            authService?.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
+                                update(response, ex)
+                                persistTo(applicationContext)
+                                authService?.let { service ->
+                                    performActionWithFreshTokens(service) { accessToken, _, _ ->
+                                        Toast.makeText(context, "Access token: $accessToken", Toast.LENGTH_LONG).show()
+                                    }
+                                }
                             }
                         }
                     }
