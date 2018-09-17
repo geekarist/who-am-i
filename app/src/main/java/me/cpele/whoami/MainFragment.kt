@@ -1,5 +1,6 @@
 package me.cpele.whoami
 
+import android.app.Application
 import android.app.PendingIntent
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -20,8 +21,8 @@ class MainFragment : Fragment() {
 
     companion object {
         fun newInstance() = MainFragment()
-        private const val CLIENT_ID = "511828570984-fuprh0cm7665emlne3rnf9pk34kkn86s.apps.googleusercontent.com"
-        private const val REDIRECT_URI = "com.googleusercontent.apps.511828570984-fuprh0cm7665emlne3rnf9pk34kkn86s:/oauth2redirect"
+        private const val CLIENT_ID = "709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906.apps.googleusercontent.com"
+        private const val REDIRECT_URI = "com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906:/oauth2redirect"
         private const val AUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
         private const val TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token"
         private const val REQUEST_CODE_AUTH_TOKEN = 42
@@ -92,7 +93,9 @@ class MainFragment : Fragment() {
                                 persistTo(applicationContext)
                                 authService?.let { service ->
                                     performActionWithFreshTokens(service) { accessToken, _, _ ->
-                                        Toast.makeText(context, "Access token: $accessToken", Toast.LENGTH_LONG).show()
+                                        accessToken?.let {
+                                            ProfileAsyncTask(applicationContext as? Application).execute(it)
+                                        }
                                     }
                                 }
                             }
@@ -103,9 +106,6 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun callUserInfo(accessToken: String?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
 
 const val PREF_AUTH_STATE = "PREF_AUTH_STATE"

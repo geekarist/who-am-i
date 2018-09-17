@@ -16,7 +16,7 @@ android {
         dataBinding {
             enabled true
         }
-        manifestPlaceholders = [appAuthRedirectScheme: 'com.googleusercontent.apps.511828570984-fuprh0cm7665emlne3rnf9pk34kkn86s']
+        manifestPlaceholders = [appAuthRedirectScheme: 'com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906']
     }
     buildTypes {
         release {
