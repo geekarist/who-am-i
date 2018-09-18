@@ -41,7 +41,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val response = AuthorizationResponse.fromIntent(intent)
             val error = AuthorizationException.fromIntent(intent)
             val authState = AuthState(response, error)
-            Log.d(MainFragment::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
+            Log.d(this::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
             authState.persistTo(getApplication())
 
