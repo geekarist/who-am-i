@@ -50,7 +50,7 @@ class MainFragment : Fragment() {
         binding.setLifecycleOwner(this)
     }
 
-    private val authService by lazy { context?.applicationContext?.let { AuthorizationService(it) } }
+    private val authService by lazy { AuthorizationService(requireContext().applicationContext) }
 
     fun signIn() {
         context?.apply {
@@ -63,40 +63,37 @@ class MainFragment : Fragment() {
             ).setScope("profile").build()
             val intent = Intent(applicationContext, MainActivity::class.java).setAction(ACTION_AUTH_TOKEN_RESPONSE)
             val pendingIntent = PendingIntent.getActivity(applicationContext, REQUEST_CODE_AUTH_TOKEN, intent, 0)
-            authService?.performAuthorizationRequest(request, pendingIntent)
+            authService.performAuthorizationRequest(request, pendingIntent)
         }
     }
 
     override fun onResume() {
         super.onResume()
         activity?.apply {
-            if (intent.action == ACTION_AUTH_TOKEN_RESPONSE) {
-
+            if (activity?.intent?.action == ACTION_AUTH_TOKEN_RESPONSE) {
                 val response = AuthorizationResponse.fromIntent(intent)
                 val error = AuthorizationException.fromIntent(intent)
                 val authState = AuthState(response, error)
                 Log.d(MainFragment::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
-                authState.apply {
-                    persistTo(applicationContext)
-                    if (authorizationException != null) {
-                        Toast.makeText(
-                                applicationContext,
-                                "Auth error: ${authorizationException?.message}",
-                                Toast.LENGTH_LONG
-                        ).show()
-                        Log.w(MainFragment::class.java.simpleName, authorizationException)
-                    } else {
-                        response?.apply {
-                            authService?.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
-                                update(response, ex)
-                                persistTo(applicationContext)
-                                authService?.let { service ->
-                                    performActionWithFreshTokens(service) { accessToken, _, _ ->
-                                        accessToken?.let {
-                                            ProfileAsyncTask(applicationContext as? Application).execute(it)
-                                        }
-                                    }
+                authState.persistTo(applicationContext)
+
+                val authorizationException = authState.authorizationException
+                if (authorizationException != null) {
+                    Toast.makeText(
+                            applicationContext,
+                            "Auth error: ${authorizationException.message}",
+                            Toast.LENGTH_LONG
+                    ).show()
+                    Log.w(MainFragment::class.java.simpleName, authorizationException)
+                } else {
+                    response?.apply {
+                        authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
+                            authState.update(response, ex)
+                            authState.persistTo(applicationContext)
+                            authState.performActionWithFreshTokens(authService) { accessToken, _, _ ->
+                                accessToken?.let {
+                                    ProfileAsyncTask(applicationContext as? Application).execute(it)
                                 }
                             }
                         }
