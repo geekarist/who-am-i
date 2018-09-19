@@ -9,7 +9,7 @@ import net.openid.appauth.AuthState
 
 class AuthRepository(private val application: Application?) {
 
-    private val _isLoggedIn = MutableLiveData<Boolean>().apply { value = false }
+    private val _isLoggedIn = MutableLiveData<Boolean>()
     val isLoggedIn: LiveData<Boolean> = _isLoggedIn
 
     private val listener = { sharedPreferences: SharedPreferences, key: String ->
@@ -25,6 +25,7 @@ class AuthRepository(private val application: Application?) {
     }
 
     init {
+        listener(PreferenceManager.getDefaultSharedPreferences(application), PREF_AUTH_STATE)
         PreferenceManager.getDefaultSharedPreferences(application).registerOnSharedPreferenceChangeListener(listener)
     }
 
