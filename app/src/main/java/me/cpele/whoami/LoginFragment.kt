@@ -16,7 +16,10 @@ class LoginFragment : Fragment() {
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
+        viewModel = ViewModelProviders.of(
+                this,
+                LoginViewModel.Factory(AuthRepository(CustomApp.INSTANCE), CustomApp.INSTANCE)
+        ).get(LoginViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

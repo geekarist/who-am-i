@@ -5,7 +5,7 @@ import android.app.Application
 class CustomApp : Application() {
 
     companion object {
-        var INSTANCE: CustomApp? = null
+        lateinit var INSTANCE: CustomApp
     }
 
     override fun onCreate() {

@@ -3,15 +3,29 @@ package me.cpele.whoami
 import android.app.Application
 import android.app.PendingIntent
 import android.arch.lifecycle.AndroidViewModel
-import android.content.Context
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.net.Uri
-import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import net.openid.appauth.*
 
-class LoginViewModel(application: Application, private val authRepository: AuthRepository) : AndroidViewModel(application) {
+class LoginViewModel(
+        application: Application,
+        private val authRepository: AuthRepository
+) : AndroidViewModel(application) {
+
+    class Factory(
+            private val authRepository: AuthRepository,
+            private val application: Application
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return modelClass.cast(LoginViewModel(application, authRepository)) as T
+        }
+
+    }
+
     companion object {
         private const val CLIENT_ID = "709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906.apps.googleusercontent.com"
         private const val REDIRECT_URI = "com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906:/oauth2redirect"
