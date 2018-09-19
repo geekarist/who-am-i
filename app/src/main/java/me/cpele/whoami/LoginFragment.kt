@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import me.cpele.whoami.databinding.MainFragmentBinding
+import me.cpele.whoami.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
 
@@ -26,7 +26,7 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = MainFragmentBinding.bind(view)
+        val binding = FragmentLoginBinding.bind(view)
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
     }
