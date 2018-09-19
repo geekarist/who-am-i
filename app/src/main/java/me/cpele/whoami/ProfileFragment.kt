@@ -1,5 +1,6 @@
 package me.cpele.whoami
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -7,9 +8,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import me.cpele.whoami.databinding.MainFragmentBinding
 
 class ProfileFragment : Fragment() {
 
@@ -31,6 +30,13 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        findNavController().navigate(R.id.navigate_to_login)
+        viewModel.navigationEvent.observe(this, Observer<LiveEvent<Int>> { resIdEvent ->
+            resIdEvent?.run {
+                if (isUnconsumed()) {
+                    consume()
+                    findNavController().navigate(value)
+                }
+            }
+        })
     }
 }
