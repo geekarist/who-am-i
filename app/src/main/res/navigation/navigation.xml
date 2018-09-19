@@ -3,12 +3,24 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/navigation.xml"
-    app:startDestination="@id/mainFragment"
+    app:startDestination="@id/profileFragment"
     >
 
     <fragment
-        android:id="@+id/mainFragment"
-        android:label="MainFragment"
-        android:name="me.cpele.whoami.MainFragment"
+        android:id="@+id/profileFragment"
+        android:label="ProfileFragment"
+        android:name="me.cpele.whoami.ProfileFragment"
+        >
+        <action
+            android:id="@+id/navigate_to_login"
+            app:destination="@id/loginFragment"
+            />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:label="LoginFragment"
+        android:name="me.cpele.whoami.LoginFragment"
         />
+
 </navigation>

@@ -11,7 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import net.openid.appauth.*
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private const val CLIENT_ID = "709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906.apps.googleusercontent.com"
         private const val REDIRECT_URI = "com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906:/oauth2redirect"
@@ -52,7 +52,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         "Auth error: ${authorizationException.message}",
                         Toast.LENGTH_LONG
                 ).show()
-                Log.w(MainFragment::class.java.simpleName, authorizationException)
+                Log.w(LoginViewModel::class.java.simpleName, authorizationException)
             } else {
                 response?.apply {
                     authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
