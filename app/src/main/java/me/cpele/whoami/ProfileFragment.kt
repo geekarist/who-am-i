@@ -1,5 +1,6 @@
 package me.cpele.whoami
 
+import android.app.Application
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -18,7 +19,7 @@ class ProfileFragment : Fragment() {
         super.onAttach(context)
         viewModel = ViewModelProviders.of(
                 this,
-                ProfileViewModel.Factory(AuthRepository())
+                ProfileViewModel.Factory(AuthRepository(CustomApp.INSTANCE))
         ).get(ProfileViewModel::class.java)
     }
 

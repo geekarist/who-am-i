@@ -11,7 +11,7 @@ import android.util.Log
 import android.widget.Toast
 import net.openid.appauth.*
 
-class LoginViewModel(application: Application) : AndroidViewModel(application) {
+class LoginViewModel(application: Application, private val authRepository: AuthRepository) : AndroidViewModel(application) {
     companion object {
         private const val CLIENT_ID = "709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906.apps.googleusercontent.com"
         private const val REDIRECT_URI = "com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906:/oauth2redirect"
@@ -43,7 +43,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             val authState = AuthState(response, error)
             Log.d(this::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
-            authState.persistTo(getApplication())
+            authRepository.persist(authState)
 
             val authorizationException = authState.authorizationException
             if (authorizationException != null) {
@@ -57,7 +57,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 response?.apply {
                     authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
                         authState.update(response, ex)
-                        authState.persistTo(getApplication())
+                        authRepository.persist(authState)
                         authState.performActionWithFreshTokens(authService) { accessToken, _, _ ->
                             accessToken?.let {
                                 ProfileAsyncTask(getApplication()).execute(it)
@@ -68,13 +68,4 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-}
-
-const val PREF_AUTH_STATE = "PREF_AUTH_STATE"
-
-private fun AuthState.persistTo(applicationContext: Context) {
-    PreferenceManager.getDefaultSharedPreferences(applicationContext).edit().putString(
-            PREF_AUTH_STATE,
-            jsonSerializeString()
-    ).apply()
 }
