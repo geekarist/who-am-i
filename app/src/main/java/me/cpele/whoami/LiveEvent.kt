@@ -1,19 +1,13 @@
 package me.cpele.whoami
 
-class LiveEvent<T>(var value: T) {
+class LiveEvent<T>(private var _value: T? = null) {
+
+    val value: T?
+        get() = if (consumed) null else _value
 
     private var consumed: Boolean = false
 
     fun consume() {
-        synchronized(consumed) {
-            consumed = true
-        }
+        consumed = true
     }
-
-    fun isUnconsumed(): Boolean {
-        synchronized(consumed) {
-            return !consumed
-        }
-    }
-
 }

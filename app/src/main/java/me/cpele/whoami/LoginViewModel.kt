@@ -2,9 +2,7 @@ package me.cpele.whoami
 
 import android.app.Application
 import android.app.PendingIntent
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.*
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -36,6 +34,10 @@ class LoginViewModel(
     }
 
     private val authService by lazy { AuthorizationService(application) }
+
+    val loginEvent: LiveData<LiveEvent<Unit>> = Transformations.map(authRepository.isLoggedIn) {
+        if (it) LiveEvent(Unit) else null
+    }
 
     fun signIn() {
         val configuration = AuthorizationServiceConfiguration(Uri.parse(AUTH_ENDPOINT), Uri.parse(TOKEN_ENDPOINT))

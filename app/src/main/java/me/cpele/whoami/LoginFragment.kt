@@ -1,6 +1,7 @@
 package me.cpele.whoami
 
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import me.cpele.whoami.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -20,6 +22,13 @@ class LoginFragment : Fragment() {
                 this,
                 LoginViewModel.Factory(AuthRepository(CustomApp.INSTANCE), CustomApp.INSTANCE)
         ).get(LoginViewModel::class.java)
+
+        viewModel.loginEvent.observe(this, Observer { event ->
+            event?.value?.let {
+                findNavController().popBackStack()
+                event.consume()
+            }
+        })
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

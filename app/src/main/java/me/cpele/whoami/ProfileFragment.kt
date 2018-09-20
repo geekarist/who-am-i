@@ -1,6 +1,5 @@
 package me.cpele.whoami
 
-import android.app.Application
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -22,12 +21,10 @@ class ProfileFragment : Fragment() {
                 ProfileViewModel.Factory(AuthRepository(CustomApp.INSTANCE))
         ).get(ProfileViewModel::class.java)
 
-        viewModel.navigationEvent.observe(this, Observer<LiveEvent<Int>> { resIdEvent ->
-            resIdEvent?.run {
-                if (isUnconsumed()) {
-                    consume()
-                    findNavController().navigate(value)
-                }
+        viewModel.navigationEvent.observe(this, Observer<LiveEvent<Int>> { event ->
+            event?.value?.let { action ->
+                findNavController().navigate(action)
+                event.consume()
             }
         })
     }
