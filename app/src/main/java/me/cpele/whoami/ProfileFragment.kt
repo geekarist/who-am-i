@@ -21,15 +21,7 @@ class ProfileFragment : Fragment() {
                 this,
                 ProfileViewModel.Factory(AuthRepository(CustomApp.INSTANCE))
         ).get(ProfileViewModel::class.java)
-    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
         viewModel.navigationEvent.observe(this, Observer<LiveEvent<Int>> { resIdEvent ->
             resIdEvent?.run {
                 if (isUnconsumed()) {
@@ -38,5 +30,10 @@ class ProfileFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
+        return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 }
