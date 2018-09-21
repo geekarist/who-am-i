@@ -42,9 +42,4 @@ class LoginFragment : Fragment() {
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
     }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.apply { viewModel.handleIntent(intent) }
-    }
 }

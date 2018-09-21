@@ -4,6 +4,8 @@ import android.app.Application
 
 class CustomApp : Application() {
 
+    lateinit var authRepository: AuthRepository
+
     companion object {
         lateinit var INSTANCE: CustomApp
     }
@@ -11,5 +13,7 @@ class CustomApp : Application() {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
+
+        authRepository = AuthRepository(this)
     }
 }
