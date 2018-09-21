@@ -24,6 +24,14 @@ class AuthRepository(private val application: Application?) {
         }
     }
 
+    val authState: AuthState?
+        get() {
+            val strAuthState = PreferenceManager
+                    .getDefaultSharedPreferences(application)
+                    .getString(PREF_AUTH_STATE, null)
+            return strAuthState?.let { AuthState.jsonDeserialize(it) }
+        }
+
     init {
         listener(PreferenceManager.getDefaultSharedPreferences(application), PREF_AUTH_STATE)
         PreferenceManager.getDefaultSharedPreferences(application).registerOnSharedPreferenceChangeListener(listener)

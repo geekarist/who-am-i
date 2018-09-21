@@ -18,7 +18,7 @@ class ProfileFragment : Fragment() {
         super.onAttach(context)
         viewModel = ViewModelProviders.of(
                 this,
-                ProfileViewModel.Factory(AuthRepository(CustomApp.INSTANCE))
+                CustomApp.INSTANCE.profileViewModelFactory
         ).get(ProfileViewModel::class.java)
 
         viewModel.navigationEvent.observe(this, Observer<LiveEvent<Int>> { event ->

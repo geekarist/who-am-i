@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import net.openid.appauth.*
 
 class LoginService : IntentService(this::class.java.simpleName) {
@@ -21,8 +20,6 @@ class LoginService : IntentService(this::class.java.simpleName) {
         private const val ACTION_HANDLE_AUTH_RESPONSE = "me.cpele.whoami.ACTION_HANDLE_RESPONSE"
     }
 
-    private val authService by lazy { AuthorizationService(application) }
-
     override fun onHandleIntent(intent: Intent?) {
         when (intent?.action) {
             ACTION_REQUEST_AUTH -> requestAuth()
@@ -31,6 +28,7 @@ class LoginService : IntentService(this::class.java.simpleName) {
     }
 
     private val authRepository: AuthRepository = CustomApp.INSTANCE.authRepository
+    private val authService: AuthorizationService = CustomApp.INSTANCE.authService
 
     private fun requestAuth() {
         val configuration = AuthorizationServiceConfiguration(Uri.parse(AUTH_ENDPOINT), Uri.parse(TOKEN_ENDPOINT))
@@ -53,25 +51,10 @@ class LoginService : IntentService(this::class.java.simpleName) {
 
         authRepository.persist(authState)
 
-        val authorizationException = authState.authorizationException
-        if (authorizationException != null) {
-            Toast.makeText(
-                    applicationContext,
-                    "Auth error: ${authorizationException.message}",
-                    Toast.LENGTH_LONG
-            ).show()
-            Log.w(this::class.java.simpleName, authorizationException)
-        } else {
-            response?.apply {
-                authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
-                    authState.update(response, ex)
-                    authRepository.persist(authState)
-                    authState.performActionWithFreshTokens(authService) { accessToken, _, _ ->
-                        accessToken?.let {
-                            ProfileAsyncTask(application).execute(it)
-                        }
-                    }
-                }
+        response?.apply {
+            authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
+                authState.update(response, ex)
+                authRepository.persist(authState)
             }
         }
     }
