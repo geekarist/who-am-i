@@ -27,7 +27,7 @@ class LoginService : IntentService(this::class.java.simpleName) {
         }
     }
 
-    private val authRepository: AuthRepository = CustomApp.INSTANCE.authRepository
+    private val authHolder: AuthHolder = CustomApp.INSTANCE.authHolder
     private val authService: AuthorizationService = CustomApp.INSTANCE.authService
 
     private fun requestAuth() {
@@ -49,12 +49,12 @@ class LoginService : IntentService(this::class.java.simpleName) {
         val authState = AuthState(response, error)
         Log.d(this::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
-        authRepository.persist(authState)
+        authHolder.persist(authState)
 
         response?.apply {
             authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
                 authState.update(response, ex)
-                authRepository.persist(authState)
+                authHolder.persist(authState)
             }
         }
     }

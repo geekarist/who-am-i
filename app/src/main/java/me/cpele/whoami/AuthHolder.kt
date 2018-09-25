@@ -7,30 +7,21 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import net.openid.appauth.AuthState
 
-class AuthRepository(private val application: Application?) {
-
-    private val _isLoggedIn = MutableLiveData<Boolean>()
-    val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+class AuthHolder(private val application: Application?) {
 
     private val listener = { sharedPreferences: SharedPreferences, key: String ->
         if (key == PREF_AUTH_STATE) {
             val strAuthState = sharedPreferences.getString(PREF_AUTH_STATE, null)
             if (strAuthState != null) {
                 val authState = AuthState.jsonDeserialize(strAuthState)
-                _isLoggedIn.value = authState.isAuthorized
-            } else {
-                _isLoggedIn.value = false
+                _state.value = authState
             }
         }
     }
 
-    val authState: AuthState?
-        get() {
-            val strAuthState = PreferenceManager
-                    .getDefaultSharedPreferences(application)
-                    .getString(PREF_AUTH_STATE, null)
-            return strAuthState?.let { AuthState.jsonDeserialize(it) }
-        }
+    private val _state = MutableLiveData<AuthState>()
+    val state: LiveData<AuthState>
+        get() = _state
 
     init {
         listener(PreferenceManager.getDefaultSharedPreferences(application), PREF_AUTH_STATE)

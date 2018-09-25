@@ -1,31 +1,25 @@
 package me.cpele.whoami
 
 import android.app.Application
-import android.app.PendingIntent
 import android.arch.lifecycle.*
 import android.content.Intent
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import net.openid.appauth.*
 
 class LoginViewModel(
         application: Application,
-        authRepository: AuthRepository
+        authHolder: AuthHolder
 ) : AndroidViewModel(application) {
 
     class Factory(
-            private val authRepository: AuthRepository,
+            private val authHolder: AuthHolder,
             private val application: Application
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return modelClass.cast(LoginViewModel(application, authRepository)) as T
+            return modelClass.cast(LoginViewModel(application, authHolder)) as T
         }
-
     }
 
-    val loginEvent: LiveData<LiveEvent<Unit>> = Transformations.map(authRepository.isLoggedIn) {
-        if (it) LiveEvent(Unit) else null
+    val loginEvent: LiveData<LiveEvent<Unit>> = Transformations.map(authHolder.state) {
+        if (it.isAuthorized) LiveEvent(Unit) else null
     }
 
     fun signIn() {
