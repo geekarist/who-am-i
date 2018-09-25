@@ -22,6 +22,8 @@ class ProfileViewModel(
         if (!isLoggedIn) LiveEvent(R.id.navigate_to_login) else null
     }
 
+    val name = MutableLiveData<String>().apply { value = "Unknown person" }
+
     class Factory(
             private val application: Application,
             private val authRepository: AuthRepository,
