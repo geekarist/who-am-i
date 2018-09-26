@@ -3,6 +3,7 @@ package me.cpele.whoami
 import android.app.Application
 import android.arch.lifecycle.*
 import android.content.Intent
+import android.util.Log
 
 class LoginViewModel(
         application: Application,
@@ -19,7 +20,13 @@ class LoginViewModel(
     }
 
     val loginEvent: LiveData<LiveEvent<Unit>> = Transformations.map(authHolder.state) {
-        if (it.isAuthorized) LiveEvent(Unit) else null
+        if (it.isAuthorized) {
+            Log.d(this::class.java.simpleName, "Auth holder state is authorized")
+            LiveEvent(Unit)
+        } else {
+            Log.d(this::class.java.simpleName, "Auth holder state is not authorized")
+            null
+        }
     }
 
     fun signIn() {

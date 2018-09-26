@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import android.util.Log
 import net.openid.appauth.AuthState
 
 class AuthHolder(private val application: Application?) {
@@ -14,7 +15,11 @@ class AuthHolder(private val application: Application?) {
             val strAuthState = sharedPreferences.getString(PREF_AUTH_STATE, null)
             if (strAuthState != null) {
                 val authState = AuthState.jsonDeserialize(strAuthState)
+                Log.d(this::class.java.simpleName, "Auth state not null in preferences")
                 _state.value = authState
+            } else {
+                Log.d(this::class.java.simpleName, "Auth state is null in preferences")
+                _state.value = AuthState()
             }
         }
     }

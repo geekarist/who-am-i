@@ -2,6 +2,7 @@ package me.cpele.whoami
 
 import android.app.Application
 import android.arch.lifecycle.*
+import android.util.Log
 import net.openid.appauth.AuthorizationService
 
 class ProfileViewModel(
@@ -12,7 +13,13 @@ class ProfileViewModel(
 
     val navigationEvent: LiveData<LiveEvent<Int>> =
             Transformations.map(authHolder.state) { state ->
-                if (!state.isAuthorized) LiveEvent(R.id.navigate_to_login) else null
+                if (!state.isAuthorized) {
+                    Log.d(this::class.java.simpleName, "Auth holder state is not authorized")
+                    LiveEvent(R.id.navigate_to_login)
+                } else {
+                    Log.d(this::class.java.simpleName, "Auth holder state is authorized")
+                    null
+                }
             }
 
     val name = MutableLiveData<String>().apply { value = "Unknown person" }
