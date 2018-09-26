@@ -21,7 +21,7 @@ class LoginFragment : Fragment() {
         super.onAttach(context)
         viewModel = ViewModelProviders.of(
                 this,
-                LoginViewModel.Factory(AuthHolder(CustomApp.INSTANCE), CustomApp.INSTANCE)
+                CustomApp.INSTANCE.loginViewModelFactory
         ).get(LoginViewModel::class.java)
 
         viewModel.loginEvent.observe(this, Observer { event ->
