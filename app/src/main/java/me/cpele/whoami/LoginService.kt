@@ -4,6 +4,7 @@ import android.app.IntentService
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask
 import android.util.Log
 import net.openid.appauth.*
 
@@ -54,8 +55,17 @@ class LoginService : IntentService(this::class.java.simpleName) {
         response?.apply {
             authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
                 authState.update(response, ex)
-                authHolder.persist(authState)
+                MyAsyncTask(authHolder, authState).execute()
             }
+        }
+    }
+
+    class MyAsyncTask(
+            private val authHolder: AuthHolder,
+            private val authState: AuthState
+    ) : AsyncTask<Unit, Unit, Unit>() {
+        override fun doInBackground(vararg p0: Unit?) {
+            authHolder.persist(authState)
         }
     }
 }
