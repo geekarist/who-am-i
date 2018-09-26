@@ -10,7 +10,7 @@ import android.arch.persistence.room.Query
 interface AuthDao {
 
     @Query("SELECT * FROM Auth LIMIT 1")
-    fun get(): LiveData<Auth>
+    fun get(): LiveData<Auth?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun set(auth: Auth)

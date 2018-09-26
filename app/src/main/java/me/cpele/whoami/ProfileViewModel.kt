@@ -13,7 +13,7 @@ class ProfileViewModel(
 
     val navigationEvent: LiveData<LiveEvent<Int>> =
             Transformations.map(authHolder.state) { state ->
-                if (!state.isAuthorized) {
+                if (false == state?.isAuthorized) {
                     Log.d(this::class.java.simpleName, "Auth holder state is not authorized")
                     LiveEvent(R.id.navigate_to_login)
                 } else {

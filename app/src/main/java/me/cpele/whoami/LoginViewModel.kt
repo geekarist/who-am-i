@@ -20,7 +20,7 @@ class LoginViewModel(
     }
 
     val loginEvent: LiveData<LiveEvent<Unit>> = Transformations.map(authHolder.state) {
-        if (it.isAuthorized) {
+        if (true == it?.isAuthorized) {
             Log.d(this::class.java.simpleName, "Auth holder state is authorized")
             LiveEvent(Unit)
         } else {
