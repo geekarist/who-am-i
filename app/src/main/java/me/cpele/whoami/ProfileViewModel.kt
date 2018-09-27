@@ -22,7 +22,13 @@ class ProfileViewModel(
                 }
             }
 
-    val name: LiveData<String?> = Transformations.map(personRepository.one) { it.name?.formatted }
+    private val person: LiveData<PersonBo> = Transformations.switchMap(authHolder.state) { state ->
+        state?.accessToken?.let { token ->
+            personRepository.findOneByToken(token)
+        }
+    }
+
+    val name: LiveData<String> = Transformations.map(person) { it.name?.formatted }
 
     class Factory(
             private val application: Application,

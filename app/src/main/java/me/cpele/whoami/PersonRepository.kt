@@ -1,7 +1,10 @@
 package me.cpele.whoami
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 
 class PersonRepository {
-    val one = MutableLiveData<PersonBo>().apply { value = PersonBo(NameBo("Unknown person")) }
+    fun findOneByToken(token: String): LiveData<PersonBo> {
+        return MutableLiveData<PersonBo>().apply { value = PersonBo(NameBo("Person with token: $token")) }
+    }
 }
