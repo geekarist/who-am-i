@@ -16,8 +16,17 @@ class CustomApp : Application() {
 
     val authHolder: AuthHolder by lazy { AuthHolder(customDatabase.authDao()) }
     val authService by lazy { AuthorizationService(this) }
+    private val personRepository by lazy { PersonRepository() }
 
-    val profileViewModelFactory by lazy { ProfileViewModel.Factory(this, authHolder, authService) }
+    val profileViewModelFactory by lazy {
+        ProfileViewModel.Factory(
+                this,
+                authHolder,
+                authService,
+                personRepository
+        )
+    }
+
     val loginViewModelFactory by lazy {
         LoginViewModel.Factory(
                 AuthHolder(customDatabase.authDao()),

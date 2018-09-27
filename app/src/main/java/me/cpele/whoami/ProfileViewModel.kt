@@ -8,7 +8,7 @@ import net.openid.appauth.AuthorizationService
 class ProfileViewModel(
         application: Application,
         authHolder: AuthHolder,
-        authService: AuthorizationService
+        personRepository: PersonRepository
 ) : AndroidViewModel(application) {
 
     val navigationEvent: LiveData<LiveEvent<Int>> =
@@ -22,15 +22,20 @@ class ProfileViewModel(
                 }
             }
 
-    val name = MutableLiveData<String>().apply { value = "Unknown person" }
+    val name: LiveData<String?> = Transformations.map(personRepository.one) { it.name?.formatted }
 
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,
-            private val authService: AuthorizationService
+            private val authService: AuthorizationService,
+            private val personRepository: PersonRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return modelClass.cast(ProfileViewModel(application, authHolder, authService)) as T
+            return modelClass.cast(ProfileViewModel(
+                    application,
+                    authHolder,
+                    personRepository
+            )) as T
         }
     }
 }
