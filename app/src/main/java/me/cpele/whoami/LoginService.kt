@@ -50,6 +50,10 @@ class LoginService : IntentService(this::class.java.simpleName) {
         val authState = AuthState(response, error)
         Log.d(this::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
+        Log.d(
+                javaClass.simpleName,
+                "Persisting auth state with code: ${authState.jsonSerializeString()}"
+        )
         authHolder.persist(authState)
 
         response?.apply {
@@ -65,6 +69,10 @@ class LoginService : IntentService(this::class.java.simpleName) {
             private val authState: AuthState
     ) : AsyncTask<Unit, Unit, Unit>() {
         override fun doInBackground(vararg p0: Unit?) {
+            Log.d(
+                    javaClass.simpleName,
+                    "Persisting auth state with token: ${authState.jsonSerializeString()}"
+            )
             authHolder.persist(authState)
         }
     }

@@ -6,5 +6,8 @@ import net.openid.appauth.AuthState
 
 class AuthHolder(private val authDao: AuthDao) {
     val state: LiveData<AuthState?> = Transformations.map(authDao.get()) { it?.state }
-    fun persist(authState: AuthState) = authDao.set(Auth(state = authState))
+    fun persist(authState: AuthState) {
+        authDao.clear()
+        authDao.insert(Auth(state = authState))
+    }
 }

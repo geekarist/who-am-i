@@ -24,7 +24,10 @@ class LoginViewModel(
             Log.d(this::class.java.simpleName, "Auth holder state is authorized")
             LiveEvent(Unit)
         } else {
-            Log.d(this::class.java.simpleName, "Auth holder state is not authorized")
+            Log.d(
+                    javaClass.simpleName,
+                    "Auth holder state is not authorized: ${authHolder.state.value?.jsonSerializeString()}"
+            )
             null
         }
     }
