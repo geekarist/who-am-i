@@ -6,17 +6,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class PersonRepository {
+
     fun findOneByToken(token: String): LiveData<PersonBo> {
 
         val result = MutableLiveData<PersonBo>()
 
-        val retrofit = Retrofit.Builder().baseUrl("www.googleapis.com").build()
+        val peopleService = Retrofit.Builder()
+                .baseUrl("https://www.googleapis.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(PeopleService::class.java)
 
-        val peopleService = retrofit.create(PeopleService::class.java)
-
-        peopleService.getMe().enqueue(object : Callback<PersonBo?> {
+        peopleService.getMe(
+                token,
+                "AIzaSyBOmTwHDWBiRnIF9-ByRJy6ed3ZXUA9wLQ"
+        ).enqueue(object : Callback<PersonBo?> {
             override fun onFailure(call: Call<PersonBo?>, t: Throwable) {
                 TODO("not implemented")
             }
