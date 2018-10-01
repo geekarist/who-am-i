@@ -20,11 +20,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{@string/profile_hello + ' ' + viewModel.name}"
+            android:visibility="@{viewModel.nameVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Hello" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.error}"
+            android:visibility="@{viewModel.errorVisibility}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Error" />
 
     </android.support.constraint.ConstraintLayout>
 

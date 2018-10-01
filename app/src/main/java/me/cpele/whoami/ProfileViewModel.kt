@@ -3,7 +3,8 @@ package me.cpele.whoami
 import android.app.Application
 import android.arch.lifecycle.*
 import android.util.Log
-import net.openid.appauth.AuthorizationService
+import android.view.View
+import com.google.gson.Gson
 
 class ProfileViewModel(
         application: Application,
@@ -22,18 +23,35 @@ class ProfileViewModel(
                 }
             }
 
-    private val person: LiveData<PersonBo> = Transformations.switchMap(authHolder.state) { state ->
-        state?.accessToken?.let { token ->
-            personRepository.findOneByToken(token)
-        }
+    private val personRespData: LiveData<Resource<PersonBo>> =
+            Transformations.switchMap(authHolder.state) { state ->
+                state?.accessToken?.let { token ->
+                    personRepository.findOneByToken(token)
+                }
+            }
+
+    val name: LiveData<String> =
+            Transformations.map(personRespData) { resp ->
+                Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
+                resp.value?.name?.formatted
+            }
+
+    val nameVisibility: LiveData<Int> = Transformations.map(personRespData) { resp ->
+        if (resp.value?.name?.formatted == null) View.GONE else View.VISIBLE
     }
 
-    val name: LiveData<String> = Transformations.map(person) { it.name?.formatted }
+    val error: LiveData<String> = Transformations.map(personRespData) { resp ->
+        Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
+        resp.error?.message
+    }
+
+    val errorVisibility: LiveData<Int> = Transformations.map(personRespData) { resp ->
+        if (resp.error?.message != null) View.VISIBLE else View.GONE
+    }
 
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,
-            private val authService: AuthorizationService,
             private val personRepository: PersonRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

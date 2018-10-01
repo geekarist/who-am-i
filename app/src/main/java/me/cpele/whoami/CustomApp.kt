@@ -2,6 +2,7 @@ package me.cpele.whoami
 
 import android.app.Application
 import android.arch.persistence.room.Room
+import com.google.gson.Gson
 import net.openid.appauth.AuthorizationService
 
 class CustomApp : Application() {
@@ -16,13 +17,13 @@ class CustomApp : Application() {
 
     val authHolder: AuthHolder by lazy { AuthHolder(customDatabase.authDao()) }
     val authService by lazy { AuthorizationService(this) }
-    private val personRepository by lazy { PersonRepository() }
+    private val gson = Gson()
+    private val personRepository by lazy { PersonRepository(gson) }
 
     val profileViewModelFactory by lazy {
         ProfileViewModel.Factory(
                 this,
                 authHolder,
-                authService,
                 personRepository
         )
     }
