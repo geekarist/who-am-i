@@ -37,7 +37,7 @@ class PersonRepository(private val gson: Gson) {
                             else {
                                 val errorStr = errorBody()?.string()
                                 Log.d(javaClass.simpleName, errorStr)
-                                Resource(error = gson.fromJson(errorStr, RespError::class.java))
+                                Resource(error = gson.fromJson(errorStr, RespErrorBo::class.java))
                             }
                 }
             }

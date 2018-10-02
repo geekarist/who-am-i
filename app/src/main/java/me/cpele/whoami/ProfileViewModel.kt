@@ -42,11 +42,11 @@ class ProfileViewModel(
 
     val error: LiveData<String> = Transformations.map(personRespData) { resp ->
         Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
-        resp.error?.message
+        "An error has occurred: code: [${resp.error?.error?.code}], message: [${resp.error?.error?.message}]"
     }
 
     val errorVisibility: LiveData<Int> = Transformations.map(personRespData) { resp ->
-        if (resp.error?.message != null) View.VISIBLE else View.GONE
+        if (resp.error?.error?.code != null) View.VISIBLE else View.GONE
     }
 
     class Factory(
