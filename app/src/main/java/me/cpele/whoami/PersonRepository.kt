@@ -23,7 +23,7 @@ class PersonRepository(private val gson: Gson) {
                 .create(PeopleService::class.java)
 
         peopleService.getMe(
-                token,
+                "Bearer $token",
                 BuildConfig.GOOGLE_API_KEY
         ).enqueue(object : Callback<PersonBo?> {
             override fun onFailure(call: Call<PersonBo?>, t: Throwable) {

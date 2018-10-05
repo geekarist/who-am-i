@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface PeopleService {
     @GET("/plus/v1/people/me")
-    fun getMe(@Header("Bearer") authToken: String, @Query("key") key: String): Call<PersonBo>
+    fun getMe(@Header("Authorization") authToken: String, @Query("key") key: String): Call<PersonBo>
 }
