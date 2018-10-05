@@ -3,6 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
+def googleProperties = new Properties()
+googleProperties.load(new FileInputStream("$rootDir/private/google.properties"))
+def googleClientIdXfix = googleProperties.get('client.id.xfix')
+def googleApiKey = googleProperties.get('api.key')
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -15,7 +20,9 @@ android {
         dataBinding {
             enabled true
         }
-        manifestPlaceholders = [appAuthRedirectScheme: 'com.googleusercontent.apps.709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906']
+        manifestPlaceholders = [appAuthRedirectScheme: "com.googleusercontent.apps.$googleClientIdXfix"]
+        buildConfigField 'String', 'GOOGLE_CLIENT_ID_XFIX', "\"$googleClientIdXfix\""
+        buildConfigField 'String', 'GOOGLE_API_KEY', "\"$googleApiKey\""
     }
     buildTypes {
         release {

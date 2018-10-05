@@ -11,7 +11,7 @@ import net.openid.appauth.*
 class LoginService : IntentService(this::class.java.simpleName) {
 
     companion object {
-        private const val CL_ID_PFX: String = "709489431311-7fkp3nqqk596et1ns7964tlfkg7v3906"
+        private const val CL_ID_PFX: String = BuildConfig.GOOGLE_CLIENT_ID_XFIX
         private const val CLIENT_ID = "$CL_ID_PFX.apps.googleusercontent.com"
         private const val REDIRECT_URI = "com.googleusercontent.apps.$CL_ID_PFX:/oauth2redirect"
         private const val AUTH_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"

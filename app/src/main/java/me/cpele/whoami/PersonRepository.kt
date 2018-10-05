@@ -24,7 +24,7 @@ class PersonRepository(private val gson: Gson) {
 
         peopleService.getMe(
                 token,
-                "AIzaSyBOmTwHDWBiRnIF9-ByRJy6ed3ZXUA9wLQ"
+                BuildConfig.GOOGLE_API_KEY
         ).enqueue(object : Callback<PersonBo?> {
             override fun onFailure(call: Call<PersonBo?>, t: Throwable) {
                 TODO("Set value to Resource<PersonBo> with failure = Throwable")
