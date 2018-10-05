@@ -33,11 +33,11 @@ class ProfileViewModel(
     val name: LiveData<String> =
             Transformations.map(personRespData) { resp ->
                 Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
-                resp.value?.name?.formatted
+                resp.value?.name?.givenName
             }
 
     val nameVisibility: LiveData<Int> = Transformations.map(personRespData) { resp ->
-        if (resp.value?.name?.formatted == null) View.GONE else View.VISIBLE
+        if (resp.value?.name?.givenName == null) View.GONE else View.VISIBLE
     }
 
     val error: LiveData<String> = Transformations.map(personRespData) { resp ->
