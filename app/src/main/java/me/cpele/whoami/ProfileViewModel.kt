@@ -4,7 +4,6 @@ import android.app.Application
 import android.arch.lifecycle.*
 import android.util.Log
 import android.view.View
-import com.google.gson.Gson
 
 class ProfileViewModel(
         application: Application,
@@ -32,8 +31,7 @@ class ProfileViewModel(
 
     val name: LiveData<String> =
             Transformations.map(personRespData) { resp ->
-                Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
-                resp.value?.name?.givenName
+                "${resp.value?.name?.givenName} ${resp.value?.name?.familyName}"
             }
 
     val nameVisibility: LiveData<Int> = Transformations.map(personRespData) { resp ->
@@ -41,7 +39,6 @@ class ProfileViewModel(
     }
 
     val error: LiveData<String> = Transformations.map(personRespData) { resp ->
-        Log.d(javaClass.simpleName, "Response: ${Gson().toJson(resp)}")
         "An error has occurred: code: [${resp.error?.error?.code}], message: [${resp.error?.error?.message}]"
     }
 
