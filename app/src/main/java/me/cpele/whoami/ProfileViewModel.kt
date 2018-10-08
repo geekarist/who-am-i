@@ -47,7 +47,7 @@ class ProfileViewModel(
     }
 
     val imgUrl: LiveData<String> = Transformations.map(personRespData) {
-        it.value?.image?.url
+        it.value?.image?.url?.replace("?sz=50", "?sz=400")
     }
 
     val email: LiveData<String> = Transformations.map(personRespData) {
