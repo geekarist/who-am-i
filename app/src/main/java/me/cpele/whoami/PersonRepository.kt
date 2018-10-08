@@ -33,7 +33,11 @@ class PersonRepository(private val gson: Gson) {
             override fun onResponse(call: Call<PersonDto?>, response: Response<PersonDto?>) {
                 response.apply {
                     result.value =
-                            if (isSuccessful) ResourceDto(value = body())
+                            if (isSuccessful) {
+                                val resource: ResourceDto<PersonDto> = ResourceDto(value = body())
+                                Log.d(javaClass.simpleName, resource.toString())
+                                resource
+                            }
                             else {
                                 val errorStr = errorBody()?.string()
                                 Log.d(javaClass.simpleName, errorStr)
