@@ -23,6 +23,7 @@
             android:layout_marginTop="8dp"
             android:text="@{viewModel.name}"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="?android:textColorPrimary"
             android:visibility="@{viewModel.nameVisibility}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +55,7 @@
             android:layout_marginBottom="8dp"
             android:text="@string/profile_google_account"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="?android:textColorSecondary"
             app:layout_constraintBottom_toTopOf="@+id/profileImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,6 +78,7 @@
 
         <TextView
             android:id="@+id/profileEmail"
+            style="@style/Base.TextAppearance.AppCompat.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
