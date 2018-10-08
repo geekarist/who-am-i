@@ -49,6 +49,10 @@ class ProfileViewModel(
         if (resp.error?.error?.code != null) View.VISIBLE else View.GONE
     }
 
+    val imgUrl: LiveData<String> = Transformations.map(personRespData) {
+        it.value?.image?.url
+    }
+
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,

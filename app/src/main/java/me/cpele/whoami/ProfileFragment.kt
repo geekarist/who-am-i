@@ -3,13 +3,16 @@ package me.cpele.whoami
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.databinding.BindingAdapter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import me.cpele.whoami.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -44,4 +47,9 @@ class ProfileFragment : Fragment() {
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
     }
+}
+
+@BindingAdapter("imageUrl")
+fun setImgUrl(view: ImageView, url: String?) {
+    view.context?.let { Glide.with(it).load(url).into(view) }
 }
