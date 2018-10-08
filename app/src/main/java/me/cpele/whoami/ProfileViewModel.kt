@@ -23,7 +23,7 @@ class ProfileViewModel(
                 }
             }
 
-    private val personRespData: LiveData<Resource<PersonBo>> =
+    private val personRespData: LiveData<ResourceDto<PersonDto>> =
             Transformations.switchMap(authHolder.state) { state ->
                 state?.accessToken?.let { token ->
                     personRepository.findOneByToken(token)

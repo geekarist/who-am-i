@@ -12,9 +12,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class PersonRepository(private val gson: Gson) {
 
-    fun findOneByToken(token: String): LiveData<Resource<PersonBo>> {
+    fun findOneByToken(token: String): LiveData<ResourceDto<PersonDto>> {
 
-        val result = MutableLiveData<Resource<PersonBo>>()
+        val result = MutableLiveData<ResourceDto<PersonDto>>()
 
         val peopleService = Retrofit.Builder()
                 .baseUrl("https://www.googleapis.com")
@@ -25,19 +25,19 @@ class PersonRepository(private val gson: Gson) {
         peopleService.getMe(
                 "Bearer $token",
                 BuildConfig.GOOGLE_API_KEY
-        ).enqueue(object : Callback<PersonBo?> {
-            override fun onFailure(call: Call<PersonBo?>, t: Throwable) {
+        ).enqueue(object : Callback<PersonDto?> {
+            override fun onFailure(call: Call<PersonDto?>, t: Throwable) {
                 TODO("Set value to Resource<PersonBo> with failure = Throwable")
             }
 
-            override fun onResponse(call: Call<PersonBo?>, response: Response<PersonBo?>) {
+            override fun onResponse(call: Call<PersonDto?>, response: Response<PersonDto?>) {
                 response.apply {
                     result.value =
-                            if (isSuccessful) Resource(value = body())
+                            if (isSuccessful) ResourceDto(value = body())
                             else {
                                 val errorStr = errorBody()?.string()
                                 Log.d(javaClass.simpleName, errorStr)
-                                Resource(error = gson.fromJson(errorStr, RespErrorBo::class.java))
+                                ResourceDto(error = gson.fromJson(errorStr, RespErrorDto::class.java))
                             }
                 }
             }
