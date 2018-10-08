@@ -53,6 +53,10 @@ class ProfileViewModel(
         it.value?.image?.url
     }
 
+    val email: LiveData<String> = Transformations.map(personRespData) {
+        it.value?.emails?.get(0)?.value
+    }
+
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,
