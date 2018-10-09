@@ -4,11 +4,14 @@ import android.app.Application
 import android.arch.lifecycle.*
 import android.util.Log
 import android.view.View
+import net.openid.appauth.AuthorizationException
+import net.openid.appauth.AuthorizationService
 
 class ProfileViewModel(
         application: Application,
         authHolder: AuthHolder,
-        personRepository: PersonRepository
+        personRepository: PersonRepository,
+        authService: AuthorizationService
 ) : AndroidViewModel(application) {
 
     val navigationEvent: LiveData<LiveEvent<Int>> =
@@ -22,10 +25,28 @@ class ProfileViewModel(
                 }
             }
 
+    private val freshTokenData = Transformations.switchMap(authHolder.state) { state ->
+        val result = MutableLiveData<Pair<String?, AuthorizationException?>>()
+        state?.performActionWithFreshTokens(authService) { accessToken, _, exception ->
+            result.value = Pair(accessToken, exception)
+        }
+        result
+    }
+
     private val personRespData: LiveData<ResourceDto<PersonDto>> =
-            Transformations.switchMap(authHolder.state) { state ->
-                state?.accessToken?.let { token ->
-                    personRepository.findOneByToken(token)
+            Transformations.switchMap(freshTokenData) { freshTokenResult ->
+                val token = freshTokenResult.first
+                val exception = freshTokenResult.second
+                if (exception != null) {
+                    MutableLiveData<ResourceDto<PersonDto>>().apply {
+                        value = ResourceDto(error = RespErrorDto(RespErrorEmbeddedDto(
+                                listOf(),
+                                exception.code,
+                                "Error while refreshing access token: ${exception.message}"
+                        )))
+                    }
+                } else {
+                    token?.let { personRepository.findOneByToken(it) }
                 }
             }
 
@@ -57,13 +78,15 @@ class ProfileViewModel(
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,
-            private val personRepository: PersonRepository
+            private val personRepository: PersonRepository,
+            private val authService: AuthorizationService
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return modelClass.cast(ProfileViewModel(
                     application,
                     authHolder,
-                    personRepository
+                    personRepository,
+                    authService
             )) as T
         }
     }
