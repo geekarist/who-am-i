@@ -6,7 +6,16 @@ import net.openid.appauth.AuthState
 class AuthStateTypeConverter {
     @TypeConverter
     fun fromJson(json: String): AuthState {
-        return AuthState.jsonDeserialize(json)
+        val deserialized = AuthState.jsonDeserialize(json)
+        val custom = CustomAuthState(
+                deserialized.lastAuthorizationResponse,
+                deserialized.authorizationException
+        )
+        custom.update(
+                deserialized.lastTokenResponse,
+                deserialized.authorizationException
+        )
+        return custom
     }
 
     @TypeConverter

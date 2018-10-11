@@ -62,7 +62,7 @@ class LoginService : IntentService(this::class.java.simpleName) {
     private fun handleResponse(intent: Intent) {
         val response = AuthorizationResponse.fromIntent(intent)
         val error = AuthorizationException.fromIntent(intent)
-        val authState = AuthState(response, error)
+        val authState = CustomAuthState(response, error)
         Log.d(this::class.java.simpleName, "Auth code: ${response?.authorizationCode}")
 
         Log.d(
