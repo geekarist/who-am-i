@@ -27,10 +27,10 @@ class ProfileViewModel(
 
     private val freshTokenData = Transformations.switchMap(authHolder.state) { state ->
         val result = MutableLiveData<Pair<String?, AuthorizationException?>>()
-        // TODO: Prevent bad request: scope has to be empty for token refresh
-        state?.performActionWithFreshTokens(authService) { accessToken, _, exception ->
-            result.value = Pair(accessToken, exception)
-        }
+        state?.apply { needsTokenRefresh = true }
+                ?.performActionWithFreshTokens(authService) { accessToken, _, exception ->
+                    result.value = Pair(accessToken, exception)
+                }
         result
     }
 
