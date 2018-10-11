@@ -11,10 +11,14 @@ class AuthStateTypeConverter {
                 deserialized.lastAuthorizationResponse,
                 deserialized.authorizationException
         )
-        custom.update(
-                deserialized.lastTokenResponse,
-                deserialized.authorizationException
-        )
+        deserialized.apply {
+            if (lastTokenResponse != null || authorizationException != null) {
+                custom.update(
+                        lastTokenResponse,
+                        authorizationException
+                )
+            }
+        }
         return custom
     }
 
