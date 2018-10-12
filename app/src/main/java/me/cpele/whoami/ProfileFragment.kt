@@ -25,6 +25,8 @@ class ProfileFragment : Fragment() {
         ).get(ProfileViewModel::class.java)
     }
 
+    private val authService: AuthorizationService? by lazy { activity?.let { AuthorizationService(it) } }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
@@ -37,10 +39,9 @@ class ProfileFragment : Fragment() {
         })
 
         viewModel.authState.observe(this, Observer { state ->
-            activity?.let { actCtx ->
-                val authService = AuthorizationService(actCtx)
+            authService?.let { authServ ->
                 state?.apply { needsTokenRefresh = true }
-                        ?.performActionWithFreshTokens(authService) { accessToken, _, ex ->
+                        ?.performActionWithFreshTokens(authServ) { accessToken, _, ex ->
                             viewModel.freshTokenData.value = Pair(accessToken, ex)
                         }
             }
@@ -57,6 +58,11 @@ class ProfileFragment : Fragment() {
         val binding = FragmentProfileBinding.bind(view)
         binding.viewModel = viewModel
         binding.setLifecycleOwner(this)
+    }
+
+    override fun onPause() {
+        authService?.dispose()
+        super.onPause()
     }
 }
 

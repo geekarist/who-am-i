@@ -54,13 +54,14 @@ class LoginActivity : AppCompatActivity() {
                 Uri.parse(REDIRECT_URI)
         ).setScopes(AUTH_SCOPES).build()
         val intent = Intent(application, this::class.java).setAction(ACTION_HANDLE_AUTH_RESPONSE)
-        val pendingIntent = PendingIntent.getService(
+        val pendingIntent = PendingIntent.getActivity(
                 application,
                 REQUEST_CODE_AUTH_TOKEN,
                 intent,
                 0
         )
         authService.performAuthorizationRequest(request, pendingIntent)
+        finish()
     }
 
     private fun handleResponse(intent: Intent) {
@@ -73,7 +74,8 @@ class LoginActivity : AppCompatActivity() {
                 javaClass.simpleName,
                 "Persisting auth state with code: ${authState.jsonSerializeString()}"
         )
-        authHolder.persist(authState)
+
+        MyAsyncTask(authHolder, authState).execute()
 
         response?.apply {
             authService.performTokenRequest(createTokenExchangeRequest()) { response, ex ->
@@ -81,6 +83,12 @@ class LoginActivity : AppCompatActivity() {
                 MyAsyncTask(authHolder, authState).execute()
             }
         }
+        finish()
+    }
+
+    override fun onPause() {
+        authService.dispose()
+        super.onPause()
     }
 
     class MyAsyncTask(
