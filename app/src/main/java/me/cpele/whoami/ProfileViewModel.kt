@@ -5,13 +5,11 @@ import android.arch.lifecycle.*
 import android.util.Log
 import android.view.View
 import net.openid.appauth.AuthorizationException
-import net.openid.appauth.AuthorizationService
 
 class ProfileViewModel(
         application: Application,
         authHolder: AuthHolder,
-        personRepository: PersonRepository,
-        authService: AuthorizationService
+        personRepository: PersonRepository
 ) : AndroidViewModel(application) {
 
     val navigationEvent: LiveData<LiveEvent<Int>> =
@@ -25,14 +23,9 @@ class ProfileViewModel(
                 }
             }
 
-    private val freshTokenData = Transformations.switchMap(authHolder.state) { state ->
-        val result = MutableLiveData<Pair<String?, AuthorizationException?>>()
-        state?.apply { needsTokenRefresh = true }
-                ?.performActionWithFreshTokens(authService) { accessToken, _, exception ->
-                    result.value = Pair(accessToken, exception)
-                }
-        result
-    }
+    val authState = authHolder.state
+
+    val freshTokenData = MutableLiveData<Pair<String?, AuthorizationException?>>()
 
     private val personRespData: LiveData<ResourceDto<PersonDto>> =
             Transformations.switchMap(freshTokenData) { freshTokenResult ->
@@ -79,15 +72,13 @@ class ProfileViewModel(
     class Factory(
             private val application: Application,
             private val authHolder: AuthHolder,
-            private val personRepository: PersonRepository,
-            private val authService: AuthorizationService
+            private val personRepository: PersonRepository
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return modelClass.cast(ProfileViewModel(
                     application,
                     authHolder,
-                    personRepository,
-                    authService
+                    personRepository
             )) as T
         }
     }

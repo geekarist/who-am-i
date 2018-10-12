@@ -34,7 +34,7 @@ class LoginViewModel(
 
     fun signIn() {
         val application: Application = getApplication()
-        application.startService(Intent(application, LoginService::class.java)
-                .setAction(LoginService.ACTION_REQUEST_AUTH))
+        application.startActivity(Intent(application, LoginActivity::class.java)
+                .setAction(LoginActivity.ACTION_REQUEST_AUTH))
     }
 }

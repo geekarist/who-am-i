@@ -14,6 +14,7 @@ import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import me.cpele.whoami.databinding.FragmentProfileBinding
+import net.openid.appauth.AuthorizationService
 
 class ProfileFragment : Fragment() {
 
@@ -32,6 +33,16 @@ class ProfileFragment : Fragment() {
             event?.value?.let { action ->
                 findNavController().navigate(action)
                 event.consume()
+            }
+        })
+
+        viewModel.authState.observe(this, Observer { state ->
+            activity?.let { actCtx ->
+                val authService = AuthorizationService(actCtx)
+                state?.apply { needsTokenRefresh = true }
+                        ?.performActionWithFreshTokens(authService) { accessToken, _, ex ->
+                            viewModel.freshTokenData.value = Pair(accessToken, ex)
+                        }
             }
         })
     }
