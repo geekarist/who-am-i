@@ -60,9 +60,9 @@ class ProfileFragment : Fragment() {
         binding.setLifecycleOwner(this)
     }
 
-    override fun onPause() {
+    override fun onDestroy() {
         authService?.dispose()
-        super.onPause()
+        super.onDestroy()
     }
 }
 
