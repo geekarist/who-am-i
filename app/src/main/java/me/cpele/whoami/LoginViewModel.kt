@@ -34,7 +34,9 @@ class LoginViewModel(
 
     fun signIn() {
         val application: Application = getApplication()
-        application.startActivity(Intent(application, LoginActivity::class.java)
-                .setAction(LoginActivity.ACTION_REQUEST_AUTH))
+        val intent = Intent(application, LoginActivity::class.java)
+                .setAction(LoginActivity.ACTION_REQUEST_AUTH)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        application.startActivity(intent)
     }
 }
